@@ -1,6 +1,9 @@
 # Docker image to provide Lime text editor
 # Build with
-#   docker build --force-rm -t brunetto/docker-lime .
+#   $ docker build --force-rm -t brunetto/docker-lime .
+# Run with
+#   (on mac run this before: $ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"&)
+#   $ docker run -e DISPLAY=<YOUR IP>:0 -i -t  --name lime-test brunetto/docker-lime
 
 FROM ubuntu:16.04
 MAINTAINER Brunetto Ziosi <brunetto.ziosi@gmail.com>
@@ -43,5 +46,6 @@ RUN      echo "export GOPATH=/golang; " >> /root/.bashrc \
     &&   echo "export GODEBUG=cgocheck=0; " >> /root/.bashrc \
     &&   echo "alias limeqml='source /root/.bashrc && /golang/src/github.com/limetext/lime-qml/main/main'; " >> /root/.bashrc
 
-ENTRYPOINT ["limeqml"]
+#ENTRYPOINT ["limeqml"]
 #ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/golang/src/github.com/limetext/lime-qml/main/main"]
