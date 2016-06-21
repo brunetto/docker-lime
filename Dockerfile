@@ -8,8 +8,8 @@ MAINTAINER Brunetto Ziosi <brunetto.ziosi@gmail.com>
 #RUN set -euo pipefail
 
 # Set the required environment variables.
-ENV GOPATH $HOME/golang
-ENV PKG_CONFIG_PATH $GOPATH/src/github.com/limetext/rubex
+ENV GOPATH /golang
+ENV PKG_CONFIG_PATH /golang/src/github.com/limetext/rubex
 ENV GODEBUG 0
 ENV cgocheck 0 # Required for the code to work with Go 1.6.
 
@@ -38,5 +38,10 @@ RUN go get github.com/limetext/lime-qml/main/... \
 # Build the QML frontend.
 RUN cd $GOPATH/src/github.com/limetext/lime-qml/main && go build
 
-ENTRYPOINT ["/golang/src/github.com/limetext/lime-qml/main/main"]
+RUN      echo "export GOPATH=/golang; " >> /root/.bashrc \
+    &&   echo "export PKG_CONFIG_PATH=/golang/src/github.com/limetext/rubex; " >> /root/.bashrc \
+    &&   echo "export GODEBUG=cgocheck=0; " >> /root/.bashrc \
+    &&   echo "alias limeqml='source /root/.bashrc && /golang/src/github.com/limetext/lime-qml/main/main'; " >> /root/.bashrc
+
+ENTRYPOINT ["limeqml"]
 #ENTRYPOINT ["/bin/bash"]
